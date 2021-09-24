@@ -1,12 +1,14 @@
-package com.example.bikeshare
+package com.example.bikeshare.ui.elements
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.bikeshare.StackOrientation
 import com.example.bikeshare.StackOrientation.VERTICAL
 import com.example.bikeshare.StackOrientation.HORIZONTAL
-import com.example.bikeshare.ZoomButton.Companion.ZoomIn
-import com.example.bikeshare.ZoomButton.Companion.ZoomOut
+import com.example.bikeshare.Zoom
+import com.example.bikeshare.ui.elements.ZoomButton.Companion.ZoomIn
+import com.example.bikeshare.ui.elements.ZoomButton.Companion.ZoomOut
 
 @Composable
 fun ZoomControls(
