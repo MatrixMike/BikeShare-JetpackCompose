@@ -13,6 +13,10 @@ import com.google.android.libraries.maps.GoogleMap
 import com.google.android.libraries.maps.MapView
 
 
+
+const val MinZoom = 2f
+const val MaxZoom = 20f
+
 /**
  * Remembers a MapView and gives it the lifecycle of the current LifecycleOwner
  */

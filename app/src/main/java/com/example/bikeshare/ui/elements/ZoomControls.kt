@@ -7,8 +7,6 @@ import com.example.bikeshare.StackOrientation
 import com.example.bikeshare.StackOrientation.VERTICAL
 import com.example.bikeshare.StackOrientation.HORIZONTAL
 import com.example.bikeshare.Zoom
-import com.example.bikeshare.ui.elements.ZoomButton.Companion.ZoomIn
-import com.example.bikeshare.ui.elements.ZoomButton.Companion.ZoomOut
 
 @Composable
 fun ZoomControls(

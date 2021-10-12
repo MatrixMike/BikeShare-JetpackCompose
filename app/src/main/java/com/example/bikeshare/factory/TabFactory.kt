@@ -19,7 +19,7 @@ class TabFactory {
             tabs.forEach {
                 when(it) {
                     MAP -> {
-                        bikeShareMapViewModel = viewModel(factory = BikeShareViewModelFactory(repo) )
+                        bikeShareMapViewModel = viewModel(factory = BikeShareViewModelFactory(repo))
                         MapScreen.View(bikeShareMapViewModel)
                     }
 //                    LIST -> {

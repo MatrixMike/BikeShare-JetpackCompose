@@ -6,6 +6,7 @@ import java.net.URL
 import com.example.bikeshare.interfaces.Result
 
 class BikeShareRepository: BikeShareRepositoryInterface {
+
     override suspend fun getBikeShareCities(): Result<Response> {
         val url = URL("https://api.citybik.es/v2/networks")
         val connection = url.openConnection()

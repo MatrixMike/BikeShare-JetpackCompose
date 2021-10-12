@@ -1,7 +1,6 @@
 package com.example.bikeshare
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
@@ -9,10 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.bikeshare.factory.TabFactory
 import com.example.bikeshare.map.viewmodel.BikeShareMapViewModel
 import com.example.bikeshare.map.MapScreen
-import com.example.bikeshare.repository.BikeShareRepository
-
-const val MinZoom = 2f
-const val MaxZoom = 20f
+import com.example.bikeshare.repository.MockBikeShareRepository
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -23,9 +19,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TabFactory.Create(tabs)
-        }.run {
-            Log.d("howdy", "cheers")
-            /// repo.getBikeShareCities()
         }
     }
 }
@@ -33,6 +26,10 @@ class MainActivity : ComponentActivity() {
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    MapScreen.View(BikeShareMapViewModel(BikeShareRepository()))
+    MapScreen.View(
+        BikeShareMapViewModel(
+            MockBikeShareRepository()
+        )
+    )
 }
 

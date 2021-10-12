@@ -11,13 +11,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.example.bikeshare.interfaces.Result
+import com.example.bikeshare.repository.interfaces.BikeShareRepositoryInterface
 import com.google.android.libraries.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class Marker(val name: String, val latLng: LatLng)
 
-class BikeShareMapViewModel(private val repository: BikeShareRepository): ViewModel() {
+class BikeShareMapViewModel(private val repository: BikeShareRepositoryInterface): ViewModel() {
     sealed class State {
         object Loading: State()
         data class CityDataLoaded(val markers: List<Marker>): State()
@@ -29,7 +30,7 @@ class BikeShareMapViewModel(private val repository: BikeShareRepository): ViewMo
     init {
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
-                BikeShareRepository().getBikeShareCities()
+                repository.getBikeShareCities()
             }
             when (result) {
                 is Result.Success<Response> -> {
@@ -39,7 +40,7 @@ class BikeShareMapViewModel(private val repository: BikeShareRepository): ViewMo
                         }
                     ))
                 }
-                else -> Log.d("fuck", "damn")
+                else -> Log.d("view model", "error")
             }
         }
     }
@@ -48,20 +49,3 @@ class BikeShareMapViewModel(private val repository: BikeShareRepository): ViewMo
 class BikeShareViewModelFactory(private val repository: BikeShareRepository): ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T = BikeShareMapViewModel(repository) as T
 }
-
-//public class MyViewModelFactory implements ViewModelProvider.Factory {
-//    private Application mApplication;
-//    private String mParam;
-//
-//
-//    public MyViewModelFactory(Application application, String param) {
-//        mApplication = application;
-//        mParam = param;
-//    }
-//
-//
-//    @Override
-//    public <T extends ViewModel> T create(Class<T> modelClass) {
-//        return (T) new MyViewModel(mApplication, mParam);
-//    }
-//}

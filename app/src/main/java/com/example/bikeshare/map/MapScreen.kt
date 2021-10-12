@@ -30,7 +30,12 @@ class MapScreen {
             // composable. In this way, when an update to the MapView happens, this composable won't
             // recompose and the MapView won't need to be recreated.
             val mapView = rememberMapViewWithLifecycle()
-            MapViewContainer(mapView, -37.840935, 144.946457, viewModel = viewModel)
+            MapViewContainer(
+                map = mapView,
+                latitude = -37.840935,
+                longitude = 144.946457,
+                viewModel = viewModel
+            )
         }
 
         @Composable
@@ -40,10 +45,6 @@ class MapScreen {
             longitude: Double,
             viewModel: BikeShareMapViewModel
         ) {
-            val cameraPosition = remember(latitude, longitude) {
-                LatLng(latitude, longitude)
-            }
-
             when (val state = viewModel.state.collectAsState().value) {
                 BikeShareMapViewModel.State.Loading -> {
 
@@ -62,16 +63,14 @@ class MapScreen {
 
             LaunchedEffect(map) {
                 val googleMap = map.awaitMap()
-                googleMap.addMarker { position(cameraPosition) }
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(cameraPosition))
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(LatLng(latitude, longitude)))
             }
 
             var zoom by rememberSaveable(map) { mutableStateOf(InitialZoom) }
 
             BikeShareMap(
                 map = map,
-                cameraPosition = cameraPosition,
-                zoom = { zoom }
+                zoom = zoom
             )
 
             MapButtonColumn(
@@ -81,17 +80,16 @@ class MapScreen {
         }
 
         @Composable
-        private fun BikeShareMap(map: MapView, cameraPosition: LatLng, zoom: () -> Float) {
+        private fun BikeShareMap(map: MapView, zoom: Float) {
             val coroutineScope = rememberCoroutineScope()
             AndroidView({ map }) { mapView ->
-                // Reading zoom so that AndroidView recomposes when it changes. The getMapAsync lambda
-                // is stored for later, Compose doesn't recognize state reads
-                val mapZoom = zoom()
                 coroutineScope.launch {
                     val googleMap = mapView.awaitMap()
-                    googleMap.setZoom(mapZoom)
+                    googleMap.setZoom(zoom)
                     // Move camera to the same place to trigger the zoom update
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(cameraPosition))
+                    googleMap.moveCamera(
+                        CameraUpdateFactory.newCameraPosition(googleMap.cameraPosition)
+                    )
                 }
             }
         }
@@ -100,7 +98,7 @@ class MapScreen {
         private fun MapButtonColumn(zoom: Float, onZoomChanged: (Float) -> Unit) {
             Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
                 ZoomControls(
-                    orientation = StackOrientation.HORIZONTAL,
+                    orientation = StackOrientation.VERTICAL,
                     zoom = zoom,
                     onZoomChanged = onZoomChanged
                 )
